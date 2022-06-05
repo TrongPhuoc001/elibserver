@@ -8,7 +8,6 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
     constructor(private configService: ConfigService) {}
     async createTypeOrmOptions(): Promise<TypeOrmModuleOptions> {
         const opts = await getConnectionOptions();
-        console.log(opts);
         return {
             ...opts,
             autoLoadEntities: true,
