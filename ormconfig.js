@@ -16,15 +16,5 @@ module.exports = {
         migrationsDir: 'src/migrations',
     },
     synchronize: false,
-    ssl: {
-        rejectUnauthorized: false,
-    },
-    extra: {
-        ssl:
-            process.env.SSL_MODE === 'require'
-                ? {
-                      rejectUnauthorized: false,
-                  }
-                : false,
-    },
+    ssl: true,
 };
