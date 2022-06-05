@@ -45,9 +45,6 @@ export class User {
     @Column({default: false})
     is_ban: boolean;
 
-    @OneToOne(() => BookShelf, (bookShelf) => bookShelf.user)
-    book_shelf: BookShelf;
-
     @ManyToMany(() => WaitingList, (waitingList) => waitingList.users)
     waiting_lists: WaitingList[];
 

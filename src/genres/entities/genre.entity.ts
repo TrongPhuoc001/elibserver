@@ -1,9 +1,15 @@
 import {ApiProperty} from '@nestjs/swagger';
 import {Book} from 'src/book/entities/book.entity';
-import {Column, Entity, ManyToMany, PrimaryGeneratedColumn} from 'typeorm';
+import {
+    BaseEntity,
+    Column,
+    Entity,
+    ManyToMany,
+    PrimaryGeneratedColumn,
+} from 'typeorm';
 
 @Entity()
-export class Genre {
+export class Genre extends BaseEntity {
     @ApiProperty()
     @PrimaryGeneratedColumn()
     id: number;
@@ -15,4 +21,9 @@ export class Genre {
     @ApiProperty()
     @ManyToMany((_type) => Book, (book) => book.genres)
     books: Book[];
+
+    constructor(createGenre: Partial<Genre>) {
+        super();
+        Object.assign(this, createGenre);
+    }
 }

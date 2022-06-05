@@ -2,19 +2,18 @@ import {ApiProperty} from '@nestjs/swagger';
 import {Author} from 'src/author/entities/author.entity';
 import {BookShelf} from 'src/book-shelf/entities/book-shelf.entity';
 import {Genre} from 'src/genres/entities/genre.entity';
-import {WaitingList} from 'src/waiting-list/entities/waiting-list.entity';
 import {
+    BaseEntity,
     Column,
     Entity,
     JoinTable,
     ManyToMany,
     ManyToOne,
-    OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
 
 @Entity()
-export class Book {
+export class Book extends BaseEntity {
     @ApiProperty()
     @PrimaryGeneratedColumn()
     id: number;
@@ -24,26 +23,27 @@ export class Book {
     name: string;
 
     @ApiProperty()
-    @Column()
+    @Column({nullable: true})
     img_link: string;
 
     @ApiProperty()
-    @Column()
+    @Column({nullable: true})
     star: string;
 
     @ApiProperty()
-    @Column()
+    @Column({nullable: true})
     description: string;
 
     @ApiProperty()
-    @Column()
+    @Column({default: 0})
     state: number;
 
     @ApiProperty()
-    @Column()
+    @Column({default: new Date()})
     add_date: Date;
 
     @ManyToMany(() => Genre, (genre) => genre.books)
+    @JoinTable()
     genres: Genre[];
 
     @ManyToOne(() => Author, (author) => author.books)
@@ -52,7 +52,10 @@ export class Book {
     @ManyToMany(() => BookShelf, (bookShelf) => bookShelf.books)
     book_shelfs: BookShelf[];
 
-    @OneToOne(() => WaitingList, (waitingList) => waitingList.book)
-    @JoinTable()
-    waiting_list: WaitingList;
+    constructor(createBook: Partial<Book>) {
+        super();
+        this.add_date = new Date();
+        this.state = 0;
+        Object.assign(this, createBook);
+    }
 }

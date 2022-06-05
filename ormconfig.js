@@ -1,4 +1,5 @@
-const config = {
+module.exports = {
+    type: 'postgres',
     port: 5432,
     host: process.env.DB_HOST,
     username: process.env.DB_USER,
@@ -26,4 +27,3 @@ const config = {
                 : false,
     },
 };
-module.exports = config;

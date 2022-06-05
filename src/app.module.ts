@@ -10,21 +10,13 @@ import {GenresModule} from './genres/genres.module';
 import {AuthorModule} from './author/author.module';
 import {BookShelfModule} from './book-shelf/book-shelf.module';
 import {WaitingListModule} from './waiting-list/waiting-list.module';
+import {DatabaseModule} from './database/database.module';
 @Module({
     imports: [
         ConfigModule.forRoot({
             isGlobal: true,
         }),
-        TypeOrmModule.forRoot({
-            type: 'postgres',
-            port: 5432,
-            host: process.env.DB_HOST,
-            username: process.env.DB_USER,
-            password: process.env.DB_PASSWORD,
-            database: process.env.DB_NAME,
-            autoLoadEntities: true,
-            synchronize: true,
-        }),
+        DatabaseModule,
         UserModule,
         BookModule,
         AuthModule,

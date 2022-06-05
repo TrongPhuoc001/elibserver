@@ -5,6 +5,8 @@ import {
     BaseEntity,
     CreateDateColumn,
     Entity,
+    JoinColumn,
+    JoinTable,
     ManyToMany,
     OneToOne,
     PrimaryColumn,
@@ -15,12 +17,19 @@ export class WaitingList extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @OneToOne(() => Book, (book) => book.waiting_list, {eager: true})
+    @OneToOne(() => Book)
+    @JoinColumn()
     book: Book;
 
     @ManyToMany(() => User, (user) => user.waiting_lists, {eager: true})
+    @JoinTable()
     users: User[];
 
     @CreateDateColumn()
     create_at: Date;
+
+    constructor(createWaitingList: Partial<WaitingList>) {
+        super();
+        Object.assign(this, createWaitingList);
+    }
 }
