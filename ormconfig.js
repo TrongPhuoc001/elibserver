@@ -16,5 +16,4 @@ module.exports = {
         migrationsDir: 'src/migrations',
     },
     synchronize: false,
-    ssl: true,
 };
