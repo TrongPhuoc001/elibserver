@@ -1,6 +1,6 @@
 module.exports = {
     type: 'postgres',
-    url: process.env.DATABASE_URL|| process.env.DB_URL,
+    url: process.env.DATABASE_URL || process.env.DB_URL,
 
     entities: [
         process.env.NODE_ENV === 'test'

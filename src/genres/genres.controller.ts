@@ -10,7 +10,10 @@ import {
 import {GenresService} from './genres.service';
 import {CreateGenreDto} from './dto/create-genre.dto';
 import {UpdateGenreDto} from './dto/update-genre.dto';
+import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
 
+@ApiTags('Genres')
+@ApiBearerAuth()
 @Controller('genres')
 export class GenresController {
     constructor(private readonly genresService: GenresService) {}
@@ -40,3 +43,5 @@ export class GenresController {
         return this.genresService.remove(+id);
     }
 }
+
+
