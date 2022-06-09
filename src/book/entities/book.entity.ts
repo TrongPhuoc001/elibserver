@@ -65,5 +65,3 @@ export class Book extends BaseEntity {
         Object.assign(this, createBook);
     }
 }
-
-

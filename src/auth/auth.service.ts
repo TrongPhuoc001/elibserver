@@ -50,7 +50,11 @@ export class AuthService {
                 'No user with account ' + user.account,
             );
         }
-        const payload = {username: validUser.account, sub: validUser.id};
+        const payload = {
+            username: validUser.account,
+            sub: validUser.id,
+            isLibrarian: false,
+        };
         return {
             access_token: this.jwtService.sign(payload, {
                 secret: process.env.JWT_SECRET,
@@ -65,10 +69,14 @@ export class AuthService {
         );
         if (!validLib) {
             throw new UnauthorizedException(
-                'No user with account ' + lib.account,
+                'No librarian with account ' + lib.account,
             );
         }
-        const payload = {username: validLib.account, sub: validLib.id};
+        const payload = {
+            username: validLib.account,
+            sub: validLib.id,
+            isLibrarian: true,
+        };
         return {
             access_token: this.jwtService.sign(payload, {
                 secret: process.env.JWT_SECRET,

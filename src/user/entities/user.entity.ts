@@ -1,20 +1,19 @@
 import {ApiProperty} from '@nestjs/swagger';
+import * as bcrypt from 'bcrypt';
+import {BookShelf} from 'src/book-shelf/entities/book-shelf.entity';
+import {WaitingList} from 'src/waiting-list/entities/waiting-list.entity';
 import {
+    BaseEntity,
     BeforeInsert,
     BeforeUpdate,
     Column,
     Entity,
-    JoinColumn,
     JoinTable,
     ManyToMany,
-    OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
-import * as bcrypt from 'bcrypt';
-import {BookShelf} from 'src/book-shelf/entities/book-shelf.entity';
-import {WaitingList} from 'src/waiting-list/entities/waiting-list.entity';
 @Entity()
-export class User {
+export class User extends BaseEntity {
     @ApiProperty()
     @PrimaryGeneratedColumn()
     id: number;
@@ -54,6 +53,11 @@ export class User {
     @ManyToMany(() => BookShelf, (bookShelf) => bookShelf.books)
     @JoinTable()
     book_shelfs: BookShelf[];
+
+    constructor(createUser: Partial<User>) {
+        super();
+        Object.assign(this, createUser);
+    }
 
     @BeforeInsert()
     @BeforeUpdate()
