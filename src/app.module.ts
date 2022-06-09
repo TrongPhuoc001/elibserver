@@ -11,6 +11,7 @@ import {AuthorModule} from './author/author.module';
 import {BookShelfModule} from './book-shelf/book-shelf.module';
 import {WaitingListModule} from './waiting-list/waiting-list.module';
 import {DatabaseModule} from './database/database.module';
+import { LibrarianModule } from './librarian/librarian.module';
 @Module({
     imports: [
         ConfigModule.forRoot({
@@ -24,6 +25,7 @@ import {DatabaseModule} from './database/database.module';
         AuthorModule,
         BookShelfModule,
         WaitingListModule,
+        LibrarianModule,
     ],
     controllers: [AppController],
     providers: [AppService],

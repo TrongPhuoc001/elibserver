@@ -4,6 +4,8 @@ import {
     BeforeUpdate,
     Column,
     Entity,
+    JoinColumn,
+    JoinTable,
     ManyToMany,
     OneToOne,
     PrimaryGeneratedColumn,
@@ -46,7 +48,12 @@ export class User {
     is_ban: boolean;
 
     @ManyToMany(() => WaitingList, (waitingList) => waitingList.users)
+    @JoinTable()
     waiting_lists: WaitingList[];
+
+    @ManyToMany(() => BookShelf, (bookShelf) => bookShelf.books)
+    @JoinTable()
+    book_shelfs: BookShelf[];
 
     @BeforeInsert()
     @BeforeUpdate()

@@ -2,6 +2,7 @@ import {ApiProperty} from '@nestjs/swagger';
 import {Author} from 'src/author/entities/author.entity';
 import {BookShelf} from 'src/book-shelf/entities/book-shelf.entity';
 import {Genre} from 'src/genres/entities/genre.entity';
+import {WaitingList} from 'src/waiting-list/entities/waiting-list.entity';
 import {
     BaseEntity,
     Column,
@@ -50,7 +51,12 @@ export class Book extends BaseEntity {
     author: Author;
 
     @ManyToMany(() => BookShelf, (bookShelf) => bookShelf.books)
+    @JoinTable()
     book_shelfs: BookShelf[];
+
+    @ManyToMany(() => WaitingList, (waitingList) => waitingList.users)
+    @JoinTable()
+    waiting_lists: WaitingList[];
 
     constructor(createBook: Partial<Book>) {
         super();
@@ -59,3 +65,5 @@ export class Book extends BaseEntity {
         Object.assign(this, createBook);
     }
 }
+
+

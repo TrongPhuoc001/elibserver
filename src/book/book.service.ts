@@ -2,6 +2,7 @@ import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {AuthorService} from 'src/author/author.service';
 import {GenresService} from 'src/genres/genres.service';
+import {WaitingListService} from 'src/waiting-list/waiting-list.service';
 import {Repository} from 'typeorm';
 import {CreateBookDto} from './dto/create-book.dto';
 import {UpdateBookDto} from './dto/update-book.dto';
@@ -14,6 +15,7 @@ export class BookService {
         private readonly bookRepository: Repository<Book>,
         private readonly genresService: GenresService,
         private readonly authorsService: AuthorService,
+        private readonly waiting_listsService: WaitingListService,
     ) {}
 
     async create(createBookDto: CreateBookDto) {
@@ -32,7 +34,9 @@ export class BookService {
     }
 
     findAll() {
-        return this.bookRepository.find();
+        return this.bookRepository.find({
+            relations: ['author', 'genres'],
+        });
     }
 
     findOne(id: number) {

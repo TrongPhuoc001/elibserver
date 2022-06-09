@@ -6,8 +6,10 @@ import {
     Patch,
     Param,
     Delete,
+    UseGuards,
 } from '@nestjs/common';
 import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
+import {JwtAuthGuard} from 'src/auth/jwt-auth.guard';
 import {BookShelfService} from './book-shelf.service';
 import {CreateBookShelfDto} from './dto/create-book-shelf.dto';
 import {UpdateBookShelfDto} from './dto/update-book-shelf.dto';
@@ -15,6 +17,7 @@ import {UpdateBookShelfDto} from './dto/update-book-shelf.dto';
 @ApiTags('Book-shelf')
 @ApiBearerAuth()
 @Controller('book-shelf')
+@UseGuards(JwtAuthGuard)
 export class BookShelfController {
     constructor(private readonly bookShelfService: BookShelfService) {}
 

@@ -8,11 +8,14 @@ import {
     Delete,
     UseGuards,
 } from '@nestjs/common';
+import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
 import {JwtAuthGuard} from 'src/auth/jwt-auth.guard';
 import {BookService} from './book.service';
 import {CreateBookDto} from './dto/create-book.dto';
 import {UpdateBookDto} from './dto/update-book.dto';
 
+@ApiTags('Book')
+@ApiBearerAuth()
 @Controller('book')
 @UseGuards(JwtAuthGuard)
 export class BookController {

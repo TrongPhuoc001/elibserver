@@ -6,11 +6,14 @@ import {
     Patch,
     Param,
     Delete,
+    Request,
+    UseGuards,
 } from '@nestjs/common';
 import {UserService} from './user.service';
 import {CreateUserDto} from './dto/create-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
 import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
+import {JwtAuthGuard} from 'src/auth/jwt-auth.guard';
 
 @ApiTags('User')
 @ApiBearerAuth()
@@ -26,6 +29,12 @@ export class UserController {
     @Get()
     findAll() {
         return this.userService.findAll();
+    }
+
+    @Get('/profile')
+    @UseGuards(JwtAuthGuard)
+    getProfile(@Request() req) {
+        return this.userService.getProfile(req.user);
     }
 
     @Get(':id')

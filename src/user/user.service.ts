@@ -1,6 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
-import {FindOneOptions, Repository} from 'typeorm';
+import {BookShelfService} from 'src/book-shelf/book-shelf.service';
+import {Repository} from 'typeorm';
 import {CreateUserDto} from './dto/create-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
 import {User} from './entities/user.entity';
@@ -9,6 +10,7 @@ import {User} from './entities/user.entity';
 export class UserService {
     constructor(
         @InjectRepository(User) private UserRepository: Repository<User>,
+        private bookShelfService: BookShelfService,
     ) {}
 
     async create(createUserDto: CreateUserDto) {
@@ -48,5 +50,14 @@ export class UserService {
     async remove(id: number) {
         const user = await this.findOne(id);
         return this.UserRepository.delete(user);
+    }
+
+    async getProfile(user: User) {
+        return this.UserRepository.findOne({
+            where: {
+                id: user.id,
+            },
+            relations: ['book_shelfs'],
+        });
     }
 }

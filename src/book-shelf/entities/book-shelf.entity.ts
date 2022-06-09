@@ -17,13 +17,13 @@ export class BookShelf extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @OneToOne(() => User)
-    @JoinColumn()
-    user: User;
-
     @ManyToMany(() => Book, (book) => book.book_shelfs)
     @JoinTable()
     books: Book[];
+
+    @ManyToMany(() => User, (user) => user.book_shelfs)
+    @JoinTable()
+    users: User[];
 
     @CreateDateColumn()
     start_date: Date;
