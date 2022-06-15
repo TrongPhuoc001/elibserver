@@ -7,6 +7,8 @@ import {
     Param,
     Delete,
     UseGuards,
+    Put,
+    Request,
 } from '@nestjs/common';
 import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
 import {JwtAuthGuard} from 'src/auth/jwt-auth.guard';
@@ -29,8 +31,8 @@ export class BookController {
     }
 
     @Get()
-    findAll() {
-        return this.bookService.findAll();
+    findAll(@Request() req: any) {
+        return this.bookService.findAll(req.user.isLibrarian);
     }
 
     @Get(':id')
@@ -48,5 +50,17 @@ export class BookController {
     @UseGuards(LibrarianGuard)
     remove(@Param('id') id: string) {
         return this.bookService.remove(+id);
+    }
+
+    @Put('/hidden/:id')
+    @UseGuards(LibrarianGuard)
+    hidden(@Param('id') id: string) {
+        return this.bookService.hidden(+id);
+    }
+
+    @Put('/show/:id')
+    @UseGuards(LibrarianGuard)
+    show(@Param('id') id: string) {
+        return this.bookService.show(+id);
     }
 }

@@ -3,7 +3,7 @@ import {InjectRepository} from '@nestjs/typeorm';
 import {AuthorService} from 'src/author/author.service';
 import {GenresService} from 'src/genres/genres.service';
 import {WaitingListService} from 'src/waiting-list/waiting-list.service';
-import {Repository} from 'typeorm';
+import {Not, Repository} from 'typeorm';
 import {CreateBookDto} from './dto/create-book.dto';
 import {UpdateBookDto} from './dto/update-book.dto';
 import {Book} from './entities/book.entity';
@@ -33,9 +33,15 @@ export class BookService {
         return this.bookRepository.save(book);
     }
 
-    findAll() {
+    findAll(isLib: boolean) {
+        const where = {} as any;
+        if (!isLib) {
+            where.state = Not(2);
+        }
+        console.log(isLib, where);
         return this.bookRepository.find({
             relations: ['author', 'genres'],
+            where,
         });
     }
 
@@ -52,4 +58,15 @@ export class BookService {
         const book = await this.findOne(id);
         return this.bookRepository.delete(book);
     }
+
+    async hidden(id: number) {
+        const book = await this.findOne(id);
+        return this.bookRepository.save({...book, state: 2});
+    }
+
+    async show(id: number) {
+        const book = await this.findOne(id);
+        return this.bookRepository.save({...book, state: 0});
+    }
 }
+
