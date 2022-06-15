@@ -16,6 +16,7 @@ import {UpdateUserDto} from './dto/update-user.dto';
 import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
 import {JwtAuthGuard} from 'src/auth/jwt-auth.guard';
 import {LibrarianGuard} from 'src/auth/librarian.guard';
+import { BorrowBookDto } from './dto/borrow-book.dto';
 
 @ApiTags('User')
 @ApiBearerAuth()
@@ -57,8 +58,12 @@ export class UserController {
     }
 
     @Put('/borrow/:bookId')
-    borrow(@Param('bookId') bookId: string, @Request() req: any) {
-        return this.userService.borrow(+bookId, req.user.id, req.body.end_date);
+    borrow(
+        @Param('bookId') bookId: string,
+        @Request() req: any,
+        @Body() body: BorrowBookDto,
+    ) {
+        return this.userService.borrow(+bookId, req.user.id, body.end_date);
     }
 
     @Get('/join-waitlist/:bookId')
@@ -66,3 +71,5 @@ export class UserController {
         return this.userService.joinWaitlist(+bookId, req.user.id);
     }
 }
+
+
