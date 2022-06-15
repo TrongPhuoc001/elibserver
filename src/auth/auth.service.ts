@@ -6,6 +6,7 @@ import {LibrarianService} from 'src/librarian/librarian.service';
 import {CreateUserDto} from 'src/user/dto/create-user.dto';
 import {User} from 'src/user/entities/user.entity';
 import {UserService} from 'src/user/user.service';
+import {LoginDto} from './dto/login.dto';
 
 @Injectable()
 export class AuthService {
@@ -23,7 +24,7 @@ export class AuthService {
                 const {password, ...result} = user;
                 return result;
             } else {
-                return new UnauthorizedException();
+                throw new UnauthorizedException();
             }
         }
         return null;
@@ -37,13 +38,13 @@ export class AuthService {
                 const {password, ...result} = user;
                 return result;
             } else {
-                return new UnauthorizedException();
+                throw new UnauthorizedException();
             }
         }
         return null;
     }
 
-    async login(user: User) {
+    async login(user: LoginDto) {
         const validUser = await this.validateUser(user.account, user.password);
         if (!validUser) {
             throw new UnauthorizedException(
@@ -59,10 +60,12 @@ export class AuthService {
             access_token: this.jwtService.sign(payload, {
                 secret: process.env.JWT_SECRET,
             }),
+            username: validUser.name,
+            id: validUser.id,
         };
     }
 
-    async loginLibrarian(lib: Librarian) {
+    async loginLibrarian(lib: LoginDto) {
         const validLib = await this.validateLibrarian(
             lib.account,
             lib.password,
@@ -81,13 +84,15 @@ export class AuthService {
             access_token: this.jwtService.sign(payload, {
                 secret: process.env.JWT_SECRET,
             }),
+            username: validLib.name,
+            id: validLib.id,
         };
     }
 
     async register(user: CreateUserDto) {
         const userC = await this.userService.findOneUsername(user.account);
         if (userC) {
-            return new UnauthorizedException('Account already exists');
+            throw new UnauthorizedException('Account already exists');
         } else {
             const newUser = await this.userService.create(user);
             return this.userService.findOne(newUser.id);
@@ -97,7 +102,7 @@ export class AuthService {
     async registerLibrarian(user: CreateLibrarianDto) {
         const userC = await this.librarianService.findOneUsername(user.account);
         if (userC) {
-            return new UnauthorizedException('Account already exists');
+            throw new UnauthorizedException('Account already exists');
         } else {
             const newUser = await this.librarianService.create(user);
             return this.librarianService.findOne(newUser.id);

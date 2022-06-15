@@ -19,7 +19,9 @@ export class UserService {
     }
 
     findAll() {
-        return this.UserRepository.find();
+        return this.UserRepository.find({
+            relations: ['book_shelfs'],
+        });
     }
 
     findOne(id: number) {
@@ -61,3 +63,4 @@ export class UserService {
         });
     }
 }
+

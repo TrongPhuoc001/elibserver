@@ -1,5 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
+import {UserService} from 'src/user/user.service';
 import {Repository} from 'typeorm';
 import {CreateBookShelfDto} from './dto/create-book-shelf.dto';
 import {UpdateBookShelfDto} from './dto/update-book-shelf.dto';
