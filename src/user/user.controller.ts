@@ -8,13 +8,14 @@ import {
     Delete,
     Request,
     UseGuards,
+    Put,
 } from '@nestjs/common';
 import {UserService} from './user.service';
 import {CreateUserDto} from './dto/create-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
 import {ApiBearerAuth, ApiTags} from '@nestjs/swagger';
 import {JwtAuthGuard} from 'src/auth/jwt-auth.guard';
-import { LibrarianGuard } from 'src/auth/librarian.guard';
+import {LibrarianGuard} from 'src/auth/librarian.guard';
 
 @ApiTags('User')
 @ApiBearerAuth()
@@ -54,7 +55,14 @@ export class UserController {
     remove(@Param('id') id: string) {
         return this.userService.remove(+id);
     }
+
+    @Put('/borrow/:bookId')
+    borrow(@Param('bookId') bookId: string, @Request() req: any) {
+        return this.userService.borrow(+bookId, req.user.id, req.body.end_date);
+    }
+
+    @Get('/join-waitlist/:bookId')
+    joinWaitlist(@Param('bookId') bookId: string, @Request() req: any) {
+        return this.userService.joinWaitlist(+bookId, req.user.id);
+    }
 }
-
-
-

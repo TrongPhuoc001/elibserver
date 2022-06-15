@@ -21,7 +21,10 @@ export class BookShelfService {
     }
 
     findOne(id: number) {
-        return this.bookShelfRepository.findOne(id);
+        return this.bookShelfRepository.findOne({
+            where: {id},
+            relations: ['book'],
+        });
     }
 
     async update(id: number, updateBookShelfDto: UpdateBookShelfDto) {

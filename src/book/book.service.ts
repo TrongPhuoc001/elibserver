@@ -2,6 +2,9 @@ import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {AuthorService} from 'src/author/author.service';
 import {GenresService} from 'src/genres/genres.service';
+import { User } from 'src/user/entities/user.entity';
+import {UserService} from 'src/user/user.service';
+import {WaitingList} from 'src/waiting-list/entities/waiting-list.entity';
 import {WaitingListService} from 'src/waiting-list/waiting-list.service';
 import {Not, Repository} from 'typeorm';
 import {CreateBookDto} from './dto/create-book.dto';
@@ -15,7 +18,7 @@ export class BookService {
         private readonly bookRepository: Repository<Book>,
         private readonly genresService: GenresService,
         private readonly authorsService: AuthorService,
-        private readonly waiting_listsService: WaitingListService,
+        private readonly waitingListService: WaitingListService,
     ) {}
 
     async create(createBookDto: CreateBookDto) {
@@ -38,7 +41,6 @@ export class BookService {
         if (!isLib) {
             where.state = Not(2);
         }
-        console.log(isLib, where);
         return this.bookRepository.find({
             relations: ['author', 'genres'],
             where,
@@ -46,12 +48,24 @@ export class BookService {
     }
 
     findOne(id: number) {
-        return this.bookRepository.findOne(id);
+        return this.bookRepository.findOne({
+            relations: ['author', 'genres', 'waiting_lists'],
+            where: {
+                id,
+            },
+        });
     }
 
     async update(id: number, updateBookDto: UpdateBookDto) {
         const book = await this.bookRepository.findOne(id);
         return this.bookRepository.save({...book, ...updateBookDto});
+    }
+
+    async addWaitingList(id: number, user: User) {
+        const book = await this.findOne(id);
+        const waitingList = await this.waitingListService.create({user});
+        book.waiting_lists.push(waitingList);
+        return this.bookRepository.save(book);
     }
 
     async remove(id: number) {
@@ -69,4 +83,3 @@ export class BookService {
         return this.bookRepository.save({...book, state: 0});
     }
 }
-

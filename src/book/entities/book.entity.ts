@@ -10,6 +10,7 @@ import {
     JoinTable,
     ManyToMany,
     ManyToOne,
+    OneToMany,
     PrimaryGeneratedColumn,
 } from 'typeorm';
 
@@ -50,11 +51,10 @@ export class Book extends BaseEntity {
     @ManyToOne(() => Author, (author) => author.books)
     author: Author;
 
-    @ManyToMany(() => BookShelf, (bookShelf) => bookShelf.books)
-    @JoinTable()
+    @OneToMany(() => BookShelf, (bookShelf) => bookShelf.book)
     book_shelfs: BookShelf[];
 
-    @ManyToMany(() => WaitingList, (waitingList) => waitingList.users)
+    @ManyToMany(() => WaitingList)
     @JoinTable()
     waiting_lists: WaitingList[];
 

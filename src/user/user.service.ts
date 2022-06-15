@@ -1,6 +1,9 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {BookShelfService} from 'src/book-shelf/book-shelf.service';
+import {BookShelf} from 'src/book-shelf/entities/book-shelf.entity';
+import {BookService} from 'src/book/book.service';
+import {WaitingList} from 'src/waiting-list/entities/waiting-list.entity';
 import {Repository} from 'typeorm';
 import {CreateUserDto} from './dto/create-user.dto';
 import {UpdateUserDto} from './dto/update-user.dto';
@@ -11,6 +14,7 @@ export class UserService {
     constructor(
         @InjectRepository(User) private UserRepository: Repository<User>,
         private bookShelfService: BookShelfService,
+        private bookService: BookService,
     ) {}
 
     async create(createUserDto: CreateUserDto) {
@@ -25,11 +29,11 @@ export class UserService {
     }
 
     findOne(id: number) {
-        console.log(id);
         return this.UserRepository.findOneOrFail({
             where: {
                 id,
             },
+            relations: ['book_shelfs'],
         });
     }
 
@@ -59,8 +63,23 @@ export class UserService {
             where: {
                 id: user.id,
             },
-            relations: ['book_shelfs'],
+            relations: ['book_shelfs', 'book_shelfs.book'],
         });
     }
-}
 
+    async borrow(bookId: number, userId: number, end_date: Date) {
+        const user = await this.findOne(userId);
+        const book = await this.bookService.findOne(bookId);
+        const book_shelf = await this.bookShelfService.create({
+            book,
+            end_date,
+        });
+        user.book_shelfs.push(book_shelf);
+        return this.UserRepository.save(user);
+    }
+
+    async joinWaitlist(bookId: number, userId: number) {
+        const user = await this.findOne(userId);
+        return this.bookService.addWaitingList(bookId, user);
+    }
+}

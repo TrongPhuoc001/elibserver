@@ -8,6 +8,7 @@ import {
     JoinColumn,
     JoinTable,
     ManyToMany,
+    ManyToOne,
     OneToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
@@ -17,13 +18,9 @@ export class BookShelf extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToMany(() => Book, (book) => book.book_shelfs)
-    @JoinTable()
-    books: Book[];
-
-    @ManyToMany(() => User, (user) => user.book_shelfs)
-    @JoinTable()
-    users: User[];
+    @ManyToOne(() => Book, (book) => book.book_shelfs)
+    @JoinColumn()
+    book: Book;
 
     @CreateDateColumn()
     start_date: Date;

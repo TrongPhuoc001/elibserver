@@ -5,8 +5,10 @@ import {
     BaseEntity,
     CreateDateColumn,
     Entity,
+    JoinColumn,
     JoinTable,
     ManyToMany,
+    ManyToOne,
     PrimaryGeneratedColumn,
 } from 'typeorm';
 @Entity()
@@ -14,13 +16,9 @@ export class WaitingList extends BaseEntity {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @ManyToMany(() => User, (user) => user.waiting_lists, {eager: true})
-    @JoinTable()
-    users: User[];
-
-    @ManyToMany(() => Book, (book) => book.waiting_lists, {eager: true})
-    @JoinTable()
-    books: Book[];
+    @ManyToOne(() => User, (user) => user.waiting_lists, {eager: true})
+    @JoinColumn()
+    user: User;
 
     @CreateDateColumn()
     create_at: Date;

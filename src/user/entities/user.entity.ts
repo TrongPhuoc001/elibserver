@@ -10,6 +10,7 @@ import {
     Entity,
     JoinTable,
     ManyToMany,
+    OneToMany,
     PrimaryGeneratedColumn,
 } from 'typeorm';
 @Entity()
@@ -46,11 +47,10 @@ export class User extends BaseEntity {
     @Column({default: false})
     is_ban: boolean;
 
-    @ManyToMany(() => WaitingList, (waitingList) => waitingList.users)
-    @JoinTable()
+    @OneToMany(() => WaitingList, (waitingList) => waitingList.user)
     waiting_lists: WaitingList[];
 
-    @ManyToMany(() => BookShelf, (bookShelf) => bookShelf.books)
+    @ManyToMany(() => BookShelf)
     @JoinTable()
     book_shelfs: BookShelf[];
 
